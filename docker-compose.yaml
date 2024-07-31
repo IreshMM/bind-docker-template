@@ -2,10 +2,26 @@ name: bind9
 services:
   bind:
     image: ubuntu/bind9:edge
-    ports:
-      - 54:53
-      - 54:53/udp
     volumes:
       - ./zones:/etc/bind/zones
       - ./named.options.conf:/etc/bind/named.conf.options
       - ./named.local.conf:/etc/bind/named.conf.local
+    networks:
+      bind_net:
+        ipv4_address: 172.60.0.10
+  netshoot:
+    image: nicolaka/netshoot
+    command: sleep infinity
+    depends_on:
+      - bind
+    dns:
+      - 172.60.0.10
+    networks:
+      - bind_net
+
+networks:
+  bind_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.60.0.0/24

@@ -1,0 +1,11 @@
+name: bind9
+services:
+  bind:
+    image: ubuntu/bind9:edge
+    ports:
+      - 54:53
+      - 54:53/udp
+    volumes:
+      - ./zones:/etc/bind/zones
+      - ./named.options.conf:/etc/bind/named.conf.options
+      - ./named.local.conf:/etc/bind/named.conf.local
